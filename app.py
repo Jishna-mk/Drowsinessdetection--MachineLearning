@@ -367,6 +367,11 @@ def register():
             flash('Please fill in all details.', 'danger')  # Add flash message
             return render_template('register.html')
 
+        # Check if age is above 18
+        if int(age) < 18:
+            flash('You must be above 18 to register.', 'danger')  # Add flash message
+            return render_template('register.html')
+
         new_user = User(
             name=name,
             email=email,
@@ -382,6 +387,7 @@ def register():
         return redirect('/login')
 
     return render_template('register.html')
+
     
 @app.route('/dashboard')
 
