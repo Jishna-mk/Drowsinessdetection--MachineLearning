@@ -351,6 +351,8 @@ def login():
             return render_template('login.html', error='Invalid username or password')
     return render_template('login.html')
 
+import re  
+
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     if request.method == 'POST':
@@ -364,12 +366,17 @@ def register():
 
         # Check if all required fields are filled
         if not all([name, email, password, age, gender, place, phone_number]):
-            flash('Please fill in all details.', 'danger')  # Add flash message
+            flash('Please fill in all details.', 'danger') 
             return render_template('register.html')
 
         # Check if age is above 18
         if int(age) < 18:
-            flash('You must be above 18 to register.', 'danger')  # Add flash message
+            flash('You must be above 18 to register.', 'danger')
+            return render_template('register.html')
+
+        # Check if password meets criteria (at least 8 characters, including letters and numbers)
+        if len(password) < 8 or not re.search("[a-zA-Z]", password) or not re.search("[0-9]", password):
+            flash('Password must contain at least 8 characters, including letters and numbers.', 'danger')
             return render_template('register.html')
 
         new_user = User(
@@ -383,10 +390,11 @@ def register():
         )
         db.session.add(new_user)
         db.session.commit()
-        flash('Registration successful! Please log in.', 'success')  # Add flash message
+        flash('Registration successful! Please log in.', 'success')  
         return redirect('/login')
 
     return render_template('register.html')
+
 
     
 @app.route('/dashboard')
