@@ -366,17 +366,22 @@ def register():
 
         # Check if all required fields are filled
         if not all([name, email, password, age, gender, place, phone_number]):
-            flash('Please fill in all details.', 'danger') 
+            flash('Please fill in all details.', 'danger')
             return render_template('register.html')
 
         # Check if age is above 18
         if int(age) < 18:
-            flash('You must be above 18 to register.', 'danger')
+            flash('You must be above 18 to register.', 'danger') 
             return render_template('register.html')
 
         # Check if password meets criteria (at least 8 characters, including letters and numbers)
         if len(password) < 8 or not re.search("[a-zA-Z]", password) or not re.search("[0-9]", password):
             flash('Password must contain at least 8 characters, including letters and numbers.', 'danger')
+            return render_template('register.html')
+
+        # Check if phone number is exactly 10 digits
+        if not re.match(r'^\d{10}$', phone_number):
+            flash('Phone number must be exactly 10 digits.', 'danger')
             return render_template('register.html')
 
         new_user = User(
@@ -394,6 +399,7 @@ def register():
         return redirect('/login')
 
     return render_template('register.html')
+
 
 
     
